@@ -2,15 +2,16 @@
 
 api="https://api.aninetapi.com/api"
 core_api="https://aninetcore-4pkyzhmcba-ew.a.run.app/api"
-token=null
 user_id=0
+token=null
+user_agent="Dart/2.13 (dart:io)"
 
 function login() {
 	# 1 - email: (string): <email>
 	# 2 - password: (string): <password>
 	response=$(curl --request POST \
 		--url "$core_api/Login" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/x-www-form-urlencoded" \
 		--data "email=$1&password=$2")
 	if [ -n $(jq -r ".token" <<< "$response") ]; then
@@ -29,7 +30,7 @@ function register() {
 	# 6 - google: (boolean): <true, false - default: false>
 	curl --request POST \
 		--url "$core_api/Register" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/x-www-form-urlencoded" \
 		--data "name=$1&password=$2&email=$3&genderId=${4:-1}&avatarId=${5:-1}&google=${6:-false}"
 }
@@ -40,7 +41,7 @@ function get_user_favorite_animes() {
 	# 3 - skip: (integer): <skip - default: 0>
 	curl --request GET \
 		--url "$api/GetUserFavoriteAnimes?userId=$1&count=${2:-10}&skip=${3:-0}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -56,7 +57,7 @@ function get_anime_list() {
 	# 9 - translation: (string): <translation - default: ru>
 	curl --request GET \
 		--url "$api/ListAnime?sort=${1:-popularity}&genre=${2:-}&type=${3:-ova,tv,movie}&status=${4:-anons}&count=${5:-10}&skip=${6:-0}&userId=$user_id&onlyNew=${7:-false}&hasVideo=${8:-false}&translation=${9:-ru}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -66,7 +67,7 @@ function get_notifications() {
 	# 3 - is_english: (boolean): <true, false - default: false>
 	curl --request GET \
 		--url "$api/GetFavoriteLog?userId=$user_id&count=${1:-50}&skip=${2:-0}&isEnglish=${3:-false}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -77,7 +78,7 @@ function get_anime_description() {
 	# 4 - show_all_videos: (boolean): <true, false - default: true>
 	curl --request GET \
 		--url "$api/GetDescription?id=$1&userId=$user_id&translation=${2:-ru}&isBlocked=${3:-false}&showAllVideos=${4:-true}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -86,7 +87,7 @@ function get_anime_comments() {
 	# 2 - translation: (string): <translation - default: ru>
 	curl --request GET \
 		--url "$api/AnimeCommentsForList?id=$1&userId=$user_id&translation=${2:-ru}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -97,7 +98,7 @@ function comment_manga() {
 	# 4 - is_spoiler: (boolean): <true, false default: false>
 	curl --request POST \
 		--url "$core_api/Comments" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/x-www-form-urlencoded" \
 		--header "authorization: bearer $token" \
 		--data "animeId=$1&userId=$user_id&text=$2&translation=${3:-ru}&ContainsSpoilers=${4:-false}"
@@ -108,7 +109,7 @@ function like_comment() {
 	# 2 - is_like: (boolean): <true, false default: true>
 	curl --request POST \
 		--url "$core_api/AddLike?commentId=$1&userId=$user_id&like=${2:-true}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json" \
 		--header "authorization: bearer $token"
 }
@@ -117,7 +118,7 @@ function get_user_info() {
 	# 1 - user_id: (integer): <user_id>
 	curl --request GET \
 		--url "$api/User?id=$1" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -128,7 +129,7 @@ function get_user_specific_list() {
 	# 4 - order: (string): <order - default: latest>
 	curl --request GET \
 		--url "$api/SpecificList?listType=${1:-completed}&userId=$2&count=${3:-10}&order=${4:-latest}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -136,7 +137,7 @@ function get_user_friends() {
 	# 1 - user_id: (integer): <user_id>
 	curl --request GET \
 		--url "$api/Friend?id=$1" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -144,7 +145,7 @@ function get_user_pentagram() {
 	# 1 - user_id: (integer): <user_id>
 	curl --request GET \
 		--url "$api/GetPentagram?userId=$1" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -152,7 +153,7 @@ function send_friend_request() {
 	# 1 - user_id: (integer): <user_id>
 	curl --request POST \
 		--url "$core_api/AddPendingFriend?userId=$user_id&friendId=$1" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json" \
 		--header "authorization: bearer $token"
 }
@@ -161,7 +162,7 @@ function get_friend_suggestings() {
 	# 1 - count: (integer): <count - default: 1000>
 	curl --request GET \
 		--url "$api/UserSuggested?userId=$user_id&count=${1:-1000}" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json" \
 		--header "authorization: bearer $token"
 }
@@ -169,7 +170,7 @@ function get_friend_suggestings() {
 function get_account_info() {
 	curl --request GET \
 		--url "$api/User?id=$user_id" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/json"
 }
 
@@ -180,7 +181,7 @@ function change_profile_info() {
 	account_info=$(get_account_info)
 	curl --request POST \
 		--url "$core_api/ChangeUserInformation?userId=$user_id" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/x-www-form-urlencoded" \
 		--header "authorization: bearer $token" \
 		--data "name=${1:-$(jq -r ".name" <<< "$account_info")}&genderId=${2:-$(jq -r ".gender.genderId" <<< "$account_info")}&avatarId=${1:-$(jq -r ".avatarId" <<< "$account_info")}"
@@ -191,7 +192,7 @@ function change_password() {
 	# 2 - new_password: (string): <new_password>
 	curl --request POST \
 		--url "$core_api/ChangePassword" \
-		--user-agent "Dart/2.13 (dart:io)" \
+		--user-agent "$user_agent" \
 		--header "content-type: application/x-www-form-urlencoded" \
 		--header "authorization: bearer $token" \
 		--data "userId=$user_id&oldPassword=$1&newPassword=$2"
