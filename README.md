@@ -3,6 +3,6 @@ Mobile-API for [AniNet](https://aninet.app) an application in which you can conv
 
 ## Example
 ```bash
-source ani_net.sh
+source ./ani_net.sh
 login "email" "password"
 ```
